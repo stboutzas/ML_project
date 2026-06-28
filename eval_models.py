@@ -1,3 +1,4 @@
+#%%
 # ==================== TEST ====================
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,8 +10,19 @@ import seaborn as sns
 
 TRAIN_DIR = 'files/FaceMaskDataset/train'
 TEST_DIR = 'files/FaceMaskDataset/test'
-MODELS_DIR = 'files/trained_models'
-LOGS_DIR = 'files/logs'
+# MODELS_DIR = 'files/trained_models'
+# LOGS_DIR = 'files/logs'
+# if 'google.colab' in sys.modules:
+#     TRAIN_DIR = 'FaceMaskDataset/train'
+#     TEST_DIR = 'FaceMaskDataset/test'
+PATH = Path('files/check2')
+EPOCHS = 50
+NAME = f'bigger_{EPOCHS}'
+MODELS_DIR = PATH / 'trained_models'
+MODELS_DIR.mkdir(parents=True, exist_ok=True)
+LOGS_DIR = PATH / 'logs'
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
+BATCH_SIZE = 16
 
 from sklearn.metrics import classification_report, confusion_matrix, f1_score
 import gc
@@ -19,7 +31,7 @@ import gc
 # 1. LOAD THE BEST MODEL
 # ============================================
 
-def load_best_model(model_path='files/trained_models/best.keras'):
+def load_best_model(model_path=MODELS_DIR / 'best.keras'):
     """
     Loads the best saved model from checkpoint.
     """
@@ -237,7 +249,7 @@ def main():
     
 
     # 2. Create test generator
-    test_generator = create_test_generator(TEST_DIR)
+    test_generator = create_test_generator(TEST_DIR, (224, 224), BATCH_SIZE)
 
     models_dir = Path(MODELS_DIR)
     model_files = list(models_dir.glob('*.keras'))
@@ -294,3 +306,4 @@ if __name__ == "__main__":
     # Optional: Test on individual images
     # if model:
     #     test_single_images(model, TEST_DIR)
+# %%
